@@ -2,6 +2,7 @@
 #define SUBDIALOG_H
 
 #include "warning.h"
+#include "minesweeper.h"
 
 #include <QDialog>
 
@@ -32,7 +33,8 @@ private slots:
 
 private:
     Ui::Subdialog *ui;
-    QDialog* warning_window = new warning;
+    warning* WarningWindow;
+    minesweeper* NewGame;
 };
 
 #endif // SUBDIALOG_H

@@ -12,7 +12,7 @@ Dialog::Dialog(QWidget *parent)
 
 void Dialog::resizeEvent(QResizeEvent* evt)
 {
-    QPixmap bkgnd("/home/koshek/Desktop/moj_minesweeper/pictures/start_bckgrnd.png");
+    QPixmap bkgnd("/home/koshek/Desktop/moj_minesweeper/minesweeper/pictures/start_bckgrnd.png");
     bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Window, bkgnd);
@@ -29,7 +29,7 @@ void Dialog::on_Easy_clicked()
 {
     this->close();
 
-    //NewGame -> setDifficulty(easy);
+    NewGame -> setDifficulty(minesweeper::Difficulty::easy, 0, 0, 0);
     //NewGame -> show();
 }
 
@@ -37,7 +37,7 @@ void Dialog::on_Medium_clicked()
 {
     this->close();
 
-    //NewGame -> setDifficulty(medium);
+    NewGame -> setDifficulty(minesweeper::Difficulty::medium, 0, 0, 0);
     //NewGame -> show();
 }
 
@@ -45,7 +45,7 @@ void Dialog::on_Hard_clicked()
 {
     this->close();
 
-    //NewGame -> setDifficulty(medium);
+    NewGame -> setDifficulty(minesweeper::Difficulty::hard, 0, 0, 0);
     //NewGame -> show();
 }
 
@@ -53,7 +53,7 @@ void Dialog::on_Custom_clicked()
 {
     this->close();
 
-    NewGame = new minesweeper;
-    NewGame -> setDifficulty(minesweeper::Difficulty::custom);
+    Subdialog* Sub = new Subdialog;
+    Sub -> show();
 }
 

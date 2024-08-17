@@ -1,7 +1,6 @@
 #ifndef MINESWEEPER_H
 #define MINESWEEPER_H
 
-#include "subdialog.h"
 #include <QMainWindow>
 #include <QFrame>
 #include <QVBoxLayout>
@@ -25,17 +24,15 @@ public:
         custom,
     };
 
-    int rows, cols, num_mines;
+    int Rows, Cols, Mines;
 
 
     explicit minesweeper(QWidget *parent = nullptr);
-    void setDifficulty(Difficulty difficulty);
+    void setDifficulty(Difficulty difficulty, int num_rows, int num_cols, int num_mines);
     ~minesweeper();
 
 private:
     Ui::minesweeper *ui;
-    QDialog* Sub = new Subdialog;
-
     void init();
 };
 

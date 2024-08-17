@@ -28,10 +28,14 @@ void Subdialog::on_pushButton_clicked()
 
     if((rows > 0 && rows <= 50) && (cols > 0 && cols <= 50) && (num_mines >= 1 && num_mines <= cols*rows)){
         this->close();
-        //NewGame -> setDifficulty(custom);
-        //NewGame -> show();
+
+        NewGame = new minesweeper;
+        NewGame -> setDifficulty(minesweeper::Difficulty::custom, rows, cols, num_mines);
+        NewGame -> show();
+
     }else{
-        warning_window -> show();
+        WarningWindow = new warning;
+        WarningWindow -> show();
     }
 }
 

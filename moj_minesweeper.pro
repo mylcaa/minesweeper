@@ -9,20 +9,25 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    field.cpp \
     main.cpp \
     dialog.cpp \
     minesweeper.cpp \
+    square.cpp \
     subdialog.cpp \
     warning.cpp
 
 HEADERS += \
     dialog.h \
+    field.h \
     minesweeper.h \
+    square.h \
     subdialog.h \
     warning.h
 
 FORMS += \
     dialog.ui \
+    field.ui \
     minesweeper.ui \
     subdialog.ui \
     warning.ui

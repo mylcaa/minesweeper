@@ -34,7 +34,7 @@ private slots:
 
 private:
     Ui::Dialog *ui;
-    minesweeper* NewGame;
+    minesweeper* NewGame = new minesweeper;
 
     void resizeEvent(QResizeEvent* evt) override;
 

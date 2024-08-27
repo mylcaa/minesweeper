@@ -31,6 +31,7 @@ public:
 
     QList<Square*> neighbours;
     bool isMine;
+    static bool firstClick;
 
 signals:
     void left_click();
@@ -44,6 +45,7 @@ signals:
     void unflagged(bool isMine);
     void first_click(Square*);
     void revealed();
+    void unreveal();
 
 private:
 
@@ -53,7 +55,6 @@ private:
     coordinates place_square;
     unsigned int adjacentMineCnt;
     unsigned int adjacentFlaggedCnt;
-    static bool firstClick;
 
     QStateMachine fsm;
     QState* UnrevealedState;

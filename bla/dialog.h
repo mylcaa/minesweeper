@@ -1,10 +1,12 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
+#include <QPointer>
 #include <QDialog>
 #include <QDebug>
 #include <QPushButton>
 #include <QTimer>
+#include <QFrame>
 #include "field.h"
 #include "minecounter.h"
 #include "minetimer.h"
@@ -29,6 +31,7 @@ signals:
     void game_over();
     void start();
     void new_game();
+    void unreveal();
 
 
 private slots:
@@ -37,9 +40,14 @@ private:
     Ui::Dialog *ui;
 
     void setupFSM();
+    void init();
     void initialize();
 
-    Field* MineField;
+    bool init_game = 0;
+
+    QFrame* mainFrame;
+
+    Field* mineField;
     MineCounter* mineCounter;
     MineTimer* mineTimer;
     QPushButton* newGame;

@@ -46,6 +46,10 @@ void Square::setupFSM(){
     UnrevealedState -> addTransition(this, &Square::right_click, FlaggedState);
 
     FlaggedState -> addTransition(this, &Square::right_click, UnrevealedState);
+    //FlaggedState -> addTransition(this, &Square::unreveal, UnrevealedState);
+
+    //RevealedState -> addTransition(this, &Square::unreveal, UnrevealedState);
+
 
     connect(UnrevealedState, &QState::entered, [this]()
             {
@@ -89,20 +93,35 @@ void Square::setupFSM(){
                 this->setIcon(blankIcon);
 
                 if(isMine){
-                    emit game_over();
+                    game_over();
+
+                    qDebug() << "clicked on a mine in SQUARE";
+
                     this->setIcon(mineIcon);
 
                 }else if(adjacentMineCnt){
                     setNumber();
+
+                    qDebug() << "clicked on a NUMBER in SQUARE";
+
                     revealed();
 
                 }else{
-                    //qDebug() << "entered revealed state with no mine";
+                    qDebug() << "entered revealed state with NO MINE in SQUARE";
                     this->setStyleSheet(revealedStyleSheet);
                     reveal_neighbour();
+
                     revealed();
                 }
             });
+
+    /*connect(RevealedState, &QState::exited, [this]()
+            {
+                //qDebug() << "exited flagged state";
+                this->setIcon(blankIcon);
+                this->setStyleSheet(unrevealedStyleSheet);
+
+            });*/
 
     fsm.addState(UnrevealedState);
     fsm.addState(RevealedState);

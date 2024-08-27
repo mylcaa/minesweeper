@@ -19,6 +19,8 @@ public:
 
     void init();
 
+    QList<QList<Square*>> field;
+
 public slots:
 
 
@@ -28,6 +30,7 @@ signals:
     void game_over();
     void flag_count(unsigned int);
     void start_game();
+    void cover_field();
 
 private:
 
@@ -45,8 +48,7 @@ private:
 
 
     QGridLayout* layout = new QGridLayout;
-
-    QList<QList<Square*>> field;
+    QList<Square*> mined_squares;
 
 };
 

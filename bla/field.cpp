@@ -77,24 +77,33 @@ void Field::fillField(){
 
             connect(field[row][col], &Square::revealed, [this]()
                 {
+
                     numRevealedSquares++;
 
 
-                flag_count(numCorrectFlags + numIncorrectFlags);
+                    flag_count(numCorrectFlags + numIncorrectFlags);
 
-                if((numCols*numRows - numMines) == numRevealedSquares && numIncorrectFlags == 0){
+                    if((numCols*numRows - numMines) == numRevealedSquares && numIncorrectFlags == 0){
 
-                    qDebug() << "WON";
-                    victory();
-
-                }
+                        qDebug() << "WON";
+                        victory();
+                    }
 
                 });
 
-            connect(field[row][col], SIGNAL(game_over()), this, SIGNAL(game_over()));
-            connect(this, SIGNAL(game_over()), field[row][col], SIGNAL(reveal()));
+            connect(field[row][col], &Square::game_over, [this]()
+                    {
+                        qDebug() << "FIELD GAME OVER";
+                        game_over();
+
+                        for(unsigned int i = 0; i < numMines; ++i){
+                            mined_squares[i] -> reveal();
+
+                        }
+                    });
 
             connect(this, SIGNAL(victory()), field[row][col], SIGNAL(reveal()));
+            //connect(this, SIGNAL(cover_field()), field[row][col], SIGNAL(unreveal()));
         }
     }
 }
@@ -151,10 +160,11 @@ void Field::placeMines(Square* firstClicked){
 
     for (unsigned int i = 0; i < numMines; ++i)
     {
-        qDebug() << i;
+        mined_squares += unused[i];
         unused[i]->placeMine();
     }
 
     start_game();
 
 }
+

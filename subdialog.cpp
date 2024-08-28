@@ -12,7 +12,7 @@ Subdialog::Subdialog(QWidget *parent)
 
     ui->RowsLine->setText("∈[1, 50]");
     ui->ColsLine->setText("∈[1, 50]");
-    ui->MinesLine->setText("∈[1, rows*cols]");
+    ui->MinesLine->setText("∈[1, rows*cols-10]");
 }
 
 Subdialog::~Subdialog()
@@ -26,11 +26,11 @@ void Subdialog::on_pushButton_clicked()
     cols = ui->ColsLine->text().toInt();
     num_mines = ui->MinesLine->text().toInt();
 
-    if((rows > 0 && rows <= 50) && (cols > 0 && cols <= 50) && (num_mines >= 1 && num_mines <= cols*rows)){
+    if((rows > 0 && rows <= 50) && (cols > 0 && cols <= 50) && (num_mines >= 1 && num_mines <= cols*rows-10)){
         this->close();
 
-        NewGame = new minesweeper;
-        NewGame -> setDifficulty(minesweeper::Difficulty::custom, rows, cols, num_mines);
+        NewGame = new MainWindow;
+        NewGame -> setDifficulty(MainWindow::Difficulty::custom, rows, cols, num_mines);
         NewGame -> show();
 
     }else{

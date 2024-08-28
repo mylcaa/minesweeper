@@ -1,14 +1,17 @@
 #include "square.h"
-#include "ui_square.h"
 
-Square::Square(coordinates place, QPushButton *parent)
-    : place_square(place),
-      isMine(false),
-      adjacentMineCnt(0),
-      adjacentFlaggedCnt(0),
-      QPushButton(parent)
+bool Square::firstClick = false;
+
+Square::Square(coordinates place, QWidget *parent)
+    :
+    isMine(false),
+    place_square(place),
+    adjacentMineCnt(0),
+    adjacentFlaggedCnt(0),
+    QPushButton(parent)
 {
     this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    this->setFixedSize(QSize(20, 20));
     setCheckable(true);
     setMouseTracking(true);
 
@@ -17,16 +20,19 @@ Square::Square(coordinates place, QPushButton *parent)
 
 Square::~Square()
 {
-    delete UnrevealedState;
-    delete FlaggedState;
-    delete RevealedState;
 }
 
 void Square:: addNeighbour(Square* neighbour){
     neighbours += neighbour;
 
-    connect(this, reveal_neighbour(), neighbour, reveal());
+    connect(this, SIGNAL(reveal_neighbour()), neighbour, SIGNAL(reveal()));
+}
 
+void Square::placeMine()
+{
+    isMine = true;
+    for (auto neighbour : neighbours)
+        ++(neighbour -> adjacentMineCnt);
 }
 
 void Square::setupFSM(){
@@ -35,85 +41,112 @@ void Square::setupFSM(){
     QState* RevealedState = new QState();
     QState* FlaggedState = new QState();
 
-    UnrevealedState -> addTransition(this, &Square::leftClick(), RevealedState);
-    UnrevealedState -> addTransition(this, &Square::reveal(), RevealedState);
+    UnrevealedState -> addTransition(this, &Square::left_click, RevealedState);
+    UnrevealedState -> addTransition(this, &Square::reveal, RevealedState);
+    UnrevealedState -> addTransition(this, &Square::right_click, FlaggedState);
 
-    UnrevealedState -> addTransition(this, &Square::rightClick(), FlaggedState);
+    FlaggedState -> addTransition(this, &Square::right_click, UnrevealedState);
+    FlaggedState -> addTransition(this, &Square::cover_square, UnrevealedState);
 
-    FlaggedState -> addTransition(this, &Square::rightClick(), UnrevealedState);
+    RevealedState -> addTransition(this, &Square::cover_square, UnrevealedState);
+
 
     connect(UnrevealedState, &QState::entered, [this]()
-        {
-            this->setIcon(blankIcon);
-            this->setStyleSheet(unrevealedStyleSheet);
+            {
+                //qDebug() << "entered unrevealed state";
+                this->setIcon(blankIcon);
+                this->setStyleSheet(unrevealedStyleSheet);
 
-        });
+            });
 
     connect(FlaggedState, &QState::entered, [this]()
-        {
-            this->setIcon(flagIcon);
-            this->setStyleSheet(unrevealedStyleSheet);
+            {
+                //qDebug() << "entered flagged state";
+                this->setIcon(flagIcon);
+                this->setStyleSheet(unrevealedStyleSheet);
 
-            for(auto neighbour: neighbours){
-                neighbour -> ++adjacentMineCnt;
-            }
+                for(auto neighbour: neighbours){
+                    ++(neighbour -> adjacentFlaggedCnt);
+                }
 
-        });
+                flagged(isMine);
+
+            });
 
     connect(FlaggedState, &QState::exited, [this]()
             {
+                //qDebug() << "exited flagged state";
                 this->setIcon(blankIcon);
                 this->setStyleSheet(unrevealedStyleSheet);
 
                 for(auto neighbour: neighbours){
-                    neighbour -> --adjacentMineCnt;
+                    --(neighbour -> adjacentFlaggedCnt);
                 }
+
+                unflagged(isMine);
 
             });
 
     connect(RevealedState, &QState::entered, [this]()
             {
+                //qDebug() << "entered UNREVEALED";
+                this->setIcon(blankIcon);
 
                 if(isMine){
-                    emit game_over();
-                    this->setStyleSheet(unrevealedStyleSheet);
+                    game_over();
+
+                    //qDebug() << "clicked on a mine in SQUARE";
+
                     this->setIcon(mineIcon);
 
                 }else if(adjacentMineCnt){
                     setNumber();
 
+                    //qDebug() << "clicked on a NUMBER in SQUARE";
+
+                    revealed();
+
                 }else{
-                    this->setStyleSheet(unrevealedStyleSheet);
+                    //qDebug() << "entered revealed state with NO MINE in SQUARE";
+                    this->setStyleSheet(revealedStyleSheet);
                     reveal_neighbour();
 
+                    revealed();
                 }
             });
 
-    fsm.addState(unrevealedState);
-    fsm.addState(revealedState);
-    fsm.addState(flaggedState);
+    /*connect(RevealedState, &QState::exited, [this]()
+            {
+                //qDebug() << "exited flagged state";
+                this->setIcon(blankIcon);
+                this->setStyleSheet(unrevealedStyleSheet);
 
-    fsm.setInitialState(unrevealedState);
+            });*/
+
+    fsm.addState(UnrevealedState);
+    fsm.addState(RevealedState);
+    fsm.addState(FlaggedState);
+
+    fsm.setInitialState(UnrevealedState);
     fsm.start();
 }
 
 void Square::mousePressEvent(QMouseEvent *e)
 {
+    if(!firstClick){
+        firstClick = true;
+        first_click(this);
+    }
     QPushButton::mousePressEvent(e);
 }
 
 void Square::mouseReleaseEvent(QMouseEvent *e)
 {
-    if(e->button() == Qt::LeftButton)
-    {
-        qDebug() << "Left";
-        emit leftClick();
+    if(e->button() == Qt::LeftButton){
+        emit left_click();
     }
-    else if (e->button() == Qt::RightButton) {
-
-        qDebug() << "Right";
-        emit rightClick();
-
+    else if (e->button() == Qt::RightButton){
+        emit right_click();
     }
     QPushButton::mouseReleaseEvent(e);
 }
@@ -152,6 +185,6 @@ void Square::setNumber()
         break;
     }
 
-    this -> QPushButton::setStyleSheet(revealedWithNumberStylesheet.arg(color));
-    this -> QPushButton::setText(QString::number(adjacentMineCnt));
+    this->setStyleSheet(revealedWithNumberStylesheet.arg(color));
+    this->setText(QString::number(adjacentMineCnt));
 }

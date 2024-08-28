@@ -29,7 +29,7 @@ void Dialog::on_Easy_clicked()
 {
     this->close();
 
-    NewGame -> setDifficulty(minesweeper::Difficulty::easy, 0, 0, 0);
+    NewGame -> setDifficulty(MainWindow::Difficulty::easy, 0, 0, 0);
     //NewGame -> show();
 }
 
@@ -37,7 +37,7 @@ void Dialog::on_Medium_clicked()
 {
     this->close();
 
-    NewGame -> setDifficulty(minesweeper::Difficulty::medium, 0, 0, 0);
+    NewGame -> setDifficulty(MainWindow::Difficulty::medium, 0, 0, 0);
     //NewGame -> show();
 }
 
@@ -45,7 +45,7 @@ void Dialog::on_Hard_clicked()
 {
     this->close();
 
-    NewGame -> setDifficulty(minesweeper::Difficulty::hard, 0, 0, 0);
+    NewGame -> setDifficulty(MainWindow::Difficulty::hard, 0, 0, 0);
     //NewGame -> show();
 }
 

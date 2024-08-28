@@ -8,7 +8,7 @@ warning::warning(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("NOTE:");
 
-    QPixmap pixmap("/home/koshek/Desktop/moj_minesweeper/pictures/warning_sign.jpg");
+    QPixmap pixmap("/home/koshek/Desktop/final_minesweeper/pictures/warning_sign.jpg");
     ui->label->setPixmap(pixmap);
 }
 

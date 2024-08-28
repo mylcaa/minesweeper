@@ -3,14 +3,14 @@
 
 #include <QPushButton>
 #include <QStateMachine>
+#include <QMouseEvent>
+#include <QDebug>
 
 struct coordinates
 {
     unsigned int x;
     unsigned int y;
 };
-
-
 
 namespace Ui {
 class Square;
@@ -21,22 +21,35 @@ class Square : public QPushButton
     Q_OBJECT
 
 public:
-    explicit Square(coordinates place, QPushButton *parent = nullptr);
+    explicit Square(coordinates place, QWidget *parent = nullptr);
     ~Square();
 
     void mousePressEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
+    void addNeighbour(Square* neighbour);
+    void placeMine();
 
-    QStateMachine square_state;
     QList<Square*> neighbours;
 
+    bool isMine;
+    static bool firstClick;
+
+    unsigned int adjacentMineCnt;
+    unsigned int adjacentFlaggedCnt;
+
 signals:
-    void leftClick();
-    void rightClick();
+    void left_click();
+    void right_click();
 
     void game_over();
     void reveal_neighbour();
     void reveal();
+
+    void flagged(bool isMine);
+    void unflagged(bool isMine);
+    void first_click(Square*);
+    void revealed();
+    void cover_square();
 
 private:
 
@@ -45,43 +58,36 @@ private:
 
     coordinates place_square;
 
-    bool isMine;
-    unsigned int adjacentMineCnt;
-    unsigned int adjacentFlaggedCnt;
-
     QStateMachine fsm;
-    QState* unrevealedState;
-    QState* revealedState;
-    QState* flaggedState;
-
-    const QString unrevealedStyleSheet;
-    const QString revealedStyleSheet;
-    const QString unrevealedWithNUmberStyleSheet;
+    QState* UnrevealedState;
+    QState* RevealedState;
+    QState* FlaggedState;
 
     QIcon blankIcon = QIcon();
-    QIcon flagIcon = QIcon(QPixmap(":/flag").scaled(QSize(20, 20)));
-    QIcon mineIcon = QIcon(QPixmap(":/mine").scaled(QSize(20, 20)));
+    QIcon revealedIcon = QIcon(QPixmap("/home/koshek/Desktop/bla/pictures/blank.png").scaled(QSize(20, 20)));
+    QIcon flagIcon = QIcon(QPixmap("/home/koshek/Desktop/bla/pictures/flag.png").scaled(QSize(20, 20)));
+    QIcon mineIcon = QIcon(QPixmap("/home/koshek/Desktop/bla/pictures/mine.png").scaled(QSize(20, 20)));
+
+    const QString unrevealedStyleSheet =
+        "Square"
+        "{"
+        "	border: 1px solid darkgray;"
+        "	background: qradialgradient(cx : 0.4, cy : -0.1, fx : 0.4, fy : -0.1, radius : 1.35, stop : 0 #fff, stop: 1 #bbb);"
+        "	border - radius: 1px;"
+        "}";
+    const QString revealedStyleSheet =
+        "Square"
+        "{"
+        "	border: 1px solid lightgray;"
+        "}";
+    const QString revealedWithNumberStylesheet =
+        "Square"
+        "{"
+        "	color: %1;"
+        "	font-weight: bold;"
+        "	border: 1px solid lightgray;"
+        "}";
 
 };
-
-const QString Square::unrevealedStyleSheet =
-    "Tile"
-    "{"
-    "	border: 1px solid darkgray;"
-    "	background: qradialgradient(cx : 0.4, cy : -0.1, fx : 0.4, fy : -0.1, radius : 1.35, stop : 0 #fff, stop: 1 #bbb);"
-    "	border - radius: 1px;"
-    "}";
-const QString Square::revealedStyleSheet =
-    "Tile"
-    "{"
-    "	border: 1px solid lightgray;"
-    "}";
-const QString Square::revealedWithNumberStylesheet =
-    "Tile"
-    "{"
-    "	color: %1;"
-    "	font-weight: bold;"
-    "	border: 1px solid lightgray;"
-    "}";
 
 #endif // SQUARE_H

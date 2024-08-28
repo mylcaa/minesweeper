@@ -1,7 +1,7 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#include "minesweeper.h"
+#include "mainwindow.h"
 #include "subdialog.h"
 
 #include <QDialog>
@@ -34,7 +34,7 @@ private slots:
 
 private:
     Ui::Dialog *ui;
-    minesweeper* NewGame = new minesweeper;
+    MainWindow* NewGame = new MainWindow;
 
     void resizeEvent(QResizeEvent* evt) override;
 

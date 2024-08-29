@@ -1,16 +1,12 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#include "mainwindow.h"
-#include "subdialog.h"
-
 #include <QDialog>
 #include <QPushButton>
 #include <QPixmap>
 #include <QPalette>
 #include <QBrush>
-
-
+#include "mainwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -26,6 +22,11 @@ public:
     Dialog(QWidget *parent = nullptr);
     ~Dialog();
 
+
+signals:
+
+    void easy();
+
 private slots:
     void on_Easy_clicked();
     void on_Medium_clicked();
@@ -34,7 +35,7 @@ private slots:
 
 private:
     Ui::Dialog *ui;
-    MainWindow* NewGame = new MainWindow;
+    MainWindow* NewGame;
 
     void resizeEvent(QResizeEvent* evt) override;
 

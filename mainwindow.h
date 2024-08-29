@@ -18,21 +18,11 @@ class MainWindow : public QMainWindow
 
 public:
 
-    enum Difficulty
-    {
-        easy,
-        medium,
-        hard,
-        custom,
-    };
-
     int Rows, Cols, Mines;
 
-
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(int rows, int cols, int mines, QWidget *parent = nullptr);
     ~MainWindow();
 
-    void setDifficulty(Difficulty difficulty, int num_rows, int num_cols, int num_mines);
 
 signals:
 

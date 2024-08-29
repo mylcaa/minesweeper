@@ -8,6 +8,8 @@ Dialog::Dialog(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("MINESWEEPER");
     this->setStyleSheet("QPushButton::hover{color: #8399ff;}");
+
+
 }
 
 void Dialog::resizeEvent(QResizeEvent* evt)
@@ -27,33 +29,34 @@ Dialog::~Dialog()
 
 void Dialog::on_Easy_clicked()
 {
-    this->close();
 
-    NewGame -> setDifficulty(MainWindow::Difficulty::easy, 0, 0, 0);
-    //NewGame -> show();
+    NewGame = new MainWindow(8, 10, 10, this);
+
+    this->close();
+    NewGame -> show();
 }
 
 void Dialog::on_Medium_clicked()
 {
-    this->close();
+    NewGame = new MainWindow(14, 18, 40, this);
 
-    NewGame -> setDifficulty(MainWindow::Difficulty::medium, 0, 0, 0);
-    //NewGame -> show();
+    this->close();
+    NewGame -> show();
 }
 
 void Dialog::on_Hard_clicked()
 {
-    this->close();
+    NewGame = new MainWindow(22, 24, 99, this);
 
-    NewGame -> setDifficulty(MainWindow::Difficulty::hard, 0, 0, 0);
-    //NewGame -> show();
+    this->close();
+    NewGame -> show();
 }
 
 void Dialog::on_Custom_clicked()
 {
     this->close();
 
-    Subdialog* Sub = new Subdialog;
-    Sub -> show();
+    //Subdialog* Sub = new Subdialog;
+    //Sub -> show();
 }
 

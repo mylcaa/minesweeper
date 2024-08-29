@@ -1,8 +1,10 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(int rows, int cols, int mines, QWidget *parent)
     : QMainWindow(parent),
-      mainFrame(nullptr)
+    Rows(rows),
+    Cols(cols),
+    Mines(mines)
 {
 
     connect(this, &MainWindow::game_over, this, [this]()
@@ -14,14 +16,13 @@ MainWindow::MainWindow(QWidget *parent)
                 newGame->setIcon(QIcon(sunglassesIcon));
             });
 
-    //this->layout()->setSizeConstraint(QLayout::SetFixedSize);
-    initialize();
     setupFSM();
-    adjustSize();
-
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow() {
+
+    delete mainFrame;
+}
 
 void MainWindow::initialize(){
 
@@ -118,33 +119,5 @@ void MainWindow::setupFSM(){
     fsm.start();
 }
 
-void MainWindow::setDifficulty(Difficulty difficulty, int num_rows, int num_cols, int num_mines){
-    switch(difficulty){
-    case easy:
-        Rows = 8;
-        Cols = 10;
-        Mines = 10;
-        break;
-
-    case medium:
-        Rows = 14;
-        Cols = 18;
-        Mines = 40;
-        break;
-
-    case hard:
-        Rows = 22;
-        Cols = 24;
-        Mines = 99;
-        break;
-
-    case custom:
-        Rows = num_rows;
-        Cols = num_cols;
-        Mines = num_mines;
-        break;
-
-    }
-}
 
 

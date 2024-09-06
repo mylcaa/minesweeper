@@ -54,7 +54,6 @@ void Square::setupFSM(){
 
     connect(UnrevealedState, &QState::entered, [this]()
             {
-                //qDebug() << place_square.x << place_square.y << "unrevealed state";
                 this->setIcon(blankIcon);
                 this->setStyleSheet(unrevealedStyleSheet);
 
@@ -64,7 +63,6 @@ void Square::setupFSM(){
 
     connect(FlaggedState, &QState::entered, [this]()
             {
-                //qDebug() << place_square.x << place_square.y << "unrevealed state";
                 this->setIcon(flagIcon);
                 this->setStyleSheet(unrevealedStyleSheet);
 
@@ -78,7 +76,6 @@ void Square::setupFSM(){
 
     connect(FlaggedState, &QState::exited, [this]()
             {
-                //qDebug() << "exited flagged state";
                 this->setIcon(blankIcon);
                 this->setStyleSheet(unrevealedStyleSheet);
 
@@ -96,35 +93,22 @@ void Square::setupFSM(){
                 this->setIcon(blankIcon);
 
                 if(isMine){
-                    game_over();
-
-                    //qDebug() << "clicked on a mine in SQUARE";
-
                     this->setIcon(mineIcon);
+
+                    game_over();
 
                 }else if(adjacentMineCnt){
                     setNumber();
 
-                    //qDebug() << "clicked on a NUMBER in SQUARE";
-
                     revealed();
 
                 }else{
-                    //qDebug() << "entered revealed state with NO MINE in SQUARE";
                     this->setStyleSheet(revealedStyleSheet);
                     reveal_neighbour();
 
                     revealed();
                 }
             });
-
-    /*connect(RevealedState, &QState::exited, [this]()
-            {
-                //qDebug() << "exited flagged state";
-                this->setIcon(blankIcon);
-                this->setStyleSheet(unrevealedStyleSheet);
-
-            });*/
 
     fsm.addState(UnrevealedState);
     fsm.addState(RevealedState);
